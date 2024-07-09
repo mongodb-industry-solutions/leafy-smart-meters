@@ -1,0 +1,1 @@
+This demo will showcase integration with MQTT providers like Cedalo, statistical analysis with change streams to identify anomalies in data and also highlighting some benefits of time series collections 
