@@ -1,0 +1,19 @@
+{
+  "name": "smart-meter-frontend",
+  "version": "1.0.0",
+  "author": "Humza Akhtar",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.8.0",
+    "mqtt": "^4.2.8",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  }
+}
