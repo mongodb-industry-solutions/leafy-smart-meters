@@ -14,6 +14,8 @@ import {
   Description,
   Link,
 } from "@leafygreen-ui/typography";
+import Button from "@leafygreen-ui/button";
+
 
 
 export default function Home() {
@@ -22,6 +24,12 @@ export default function Home() {
   const [dataSize, setDataSize] = useState({});
   const [metrics, setMetrics] = useState({});
   const maxAnomalies = 10; // Limit the number of anomalies displayed
+
+  const [isRunning, setIsRunning] = useState(false); //For start/stop simulation button
+
+  const handleButtonClick = () => {
+    setIsRunning(!isRunning);
+  };
 
   useEffect(() => {
     const fetchMeterData = async () => {
@@ -62,9 +70,19 @@ export default function Home() {
     <div className="app-container">
       <div className="container">
         <H1>Smart Meter Headend System</H1>
-        
+
         <Body className="body">This demo simulates 5 smart meters sending data every 5 seconds - The meters are sending data via MQTT protocol to MongoDB</Body>
-        
+
+        <div className="button-container">
+          <Button
+            className="simulation-button"
+            variant={isRunning ? "default" : "baseGreen"}
+            onClick={handleButtonClick}
+          >
+            {isRunning ? "Stop Simulation" : "Start Simulation"}
+          </Button>
+        </div>
+
         <H3 className="h3">Recent Meter Data</H3>
 
         <table>
@@ -98,6 +116,8 @@ export default function Home() {
           </tbody>
         </table>
         <H3 className="h3">Recent Anomalies</H3>
+
+        <Body className="explanation">An explanation of how the anomalies are calculated</Body>
         <div className="anomalies-table-container">
           <table>
             <thead>
@@ -131,21 +151,29 @@ export default function Home() {
             <p>{dataSize.transformedStorageSize} KB</p>
           </div>
           <div className="data-size-card">
-          <Badge variant="green">Time Series</Badge>
+            <Badge variant="green">Time Series</Badge>
             <h4>Transformed Data Storage Size</h4>
             <p>{dataSize.transformedTSStorageSize} KB</p>
           </div>
           <div className="data-size-card">
-          <Badge>Regular</Badge>
+            <Badge>Regular</Badge>
             <h4>Anomalies Storage Size</h4>
             <p>{dataSize.anomaliesStorageSize} KB</p>
           </div>
           <div className="data-size-card">
-          <Badge variant="green">Time Series</Badge>
+            <Badge variant="green">Time Series</Badge>
             <h4>Anomalies Storage Size</h4>
             <p>{dataSize.anomaliesTSStorageSize} KB</p>
           </div>
         </div>
+
+        <div>
+          <iframe
+            className="charts"
+            src="https://charts.mongodb.com/charts-jeffn-zsdtj/embed/charts?id=66964b67-e341-45f4-8fb0-e8f4ef486dfc&maxDataAge=300&theme=light&autoRefresh=true"
+          ></iframe>
+        </div>
+
         <H3 className="h3">Performance Metrics</H3>
         <div className="metrics">
           <div className="metrics-card">
