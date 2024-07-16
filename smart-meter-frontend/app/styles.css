@@ -1,7 +1,7 @@
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: #f0f4f8;
-  color: #333;
+  background-color: white;
+  color: #001E2B;
   margin: 0;
   padding: 0;
   display: flex;
@@ -9,22 +9,23 @@ body {
   min-height: 100vh;
 }
 
-h1, h2 {
+h1{
   text-align: center;
-  color: #2e7d32;
-  font-weight: 300;
 }
 
-h4 {
-  text-align: center;
-  color: #2e7d32;
-  font-weight: 200;
+.h3{
+  margin-top: 30px;
+}
 
+.body{
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 30px;
   padding: 20px;
   flex: 1;
 }
@@ -39,15 +40,22 @@ table {
   overflow: hidden;
 }
 
-th, td {
-  padding: 15px;
+th,
+td {
+  padding: 15px 20px;
   text-align: left;
 }
 
-th {
-  background-color: #4caf50;
-  color: white;
+th{
+  background-color: white;
+  border-bottom: 2px solid #E8EDEB;
   font-weight: 600;
+  font-size: 14px;
+  color: #001E2B;
+}
+
+tr{
+  font-size: 14px;
 }
 
 tr:nth-child(even) {
@@ -61,30 +69,46 @@ tr:hover {
 .anomalies-table-container {
   max-height: 400px;
   overflow-y: auto;
-  margin-bottom: 20px;
 }
 
-.metrics, .data-size {
+.banner{
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+.metrics,
+.data-size {
   display: flex;
   justify-content: space-around;
   margin: 20px 0;
 }
 
-.metrics div, .data-size div {
+.metrics-card ,
+.data-size-card  {
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid rgb(241, 241, 241);
   border-radius: 10px;
   background-color: #ffffff;
   text-align: center;
   width: 45%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
 }
 
-.metrics div h4, .data-size div h4 {
+.metrics div h4,
+.data-size div h4 {
   margin: 10px 0;
-  color: #2e7d32;
-  font-weight: 500;
+  color: #001E2B;
+  font-weight:500;
+  font-size: 14px;
+  
 }
+
+.data-size-card p,.metrics p{
+  font-size: 20px;
+  color: #889397;
+}
+
 
 p {
   font-size: 16px;
@@ -95,10 +119,16 @@ p {
 
 footer {
   text-align: center;
-  padding: 20px 0;
-  background-color: #4caf50;
-  color: white;
-  font-weight: 300;
+  padding: 5px 0;
+  background-color: #E8EDEB;
+  color: #001E2B;
+  font-weight: 400;
   width: 100%;
-  position: relative;
+  position: fixed;
+  bottom: 0;
+  margin-top: 200px;
+}
+
+footer p{
+  font-size: 12px;
 }

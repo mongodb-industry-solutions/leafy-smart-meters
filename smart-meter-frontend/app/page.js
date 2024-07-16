@@ -3,6 +3,18 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
+import Banner from "@leafygreen-ui/banner";
+import Badge from "@leafygreen-ui/badge";
+import {
+  H1,
+  H2,
+  H3,
+  Body,
+  Subtitle,
+  Description,
+  Link,
+} from "@leafygreen-ui/typography";
+
 
 export default function Home() {
   const [meters, setMeters] = useState({});
@@ -49,9 +61,12 @@ export default function Home() {
   return (
     <div className="app-container">
       <div className="container">
-        <h1>Smart Meter Headend System</h1>
-        <h2>Recent Meter Data</h2>
-        <p>This demo simulates 5 smart meters sending data every 5 seconds - The meters are sending data via MQTT protocol to MongoDB</p>
+        <H1>Smart Meter Headend System</H1>
+        
+        <Body className="body">This demo simulates 5 smart meters sending data every 5 seconds - The meters are sending data via MQTT protocol to MongoDB</Body>
+        
+        <H3 className="h3">Recent Meter Data</H3>
+
         <table>
           <thead>
             <tr>
@@ -82,7 +97,7 @@ export default function Home() {
             ))}
           </tbody>
         </table>
-        <h2>Recent Anomalies</h2>
+        <H3 className="h3">Recent Anomalies</H3>
         <div className="anomalies-table-container">
           <table>
             <thead>
@@ -103,39 +118,47 @@ export default function Home() {
             </tbody>
           </table>
         </div>
-        <h2>MongoDB Time Series Benefits</h2>
-        <h4>High Compression Ratio and Fast Reads/Writes</h4>
+
+        <Banner className="banner"> <b>MongoDB's Time Series </b>offers significant benefits, including a high compression ratio and fast read/write operations.
+          <a href="https://www.mongodb.com/products/capabilities/time-series">Find out more</a>&nbsp;
+
+        </Banner>
+
         <div className="data-size">
-          <div>
-            <h4>Transformed Data Storage Size (Regular)</h4>
+          <div className="data-size-card">
+            <Badge>Regular</Badge>
+            <h4>Transformed Data Storage Size</h4>
             <p>{dataSize.transformedStorageSize} KB</p>
           </div>
-          <div>
-            <h4>Transformed Data Storage Size (Time Series)</h4>
+          <div className="data-size-card">
+          <Badge variant="green">Time Series</Badge>
+            <h4>Transformed Data Storage Size</h4>
             <p>{dataSize.transformedTSStorageSize} KB</p>
           </div>
-          <div>
-            <h4>Anomalies Storage Size (Regular)</h4>
+          <div className="data-size-card">
+          <Badge>Regular</Badge>
+            <h4>Anomalies Storage Size</h4>
             <p>{dataSize.anomaliesStorageSize} KB</p>
           </div>
-          <div>
-            <h4>Anomalies Storage Size (Time Series)</h4>
+          <div className="data-size-card">
+          <Badge variant="green">Time Series</Badge>
+            <h4>Anomalies Storage Size</h4>
             <p>{dataSize.anomaliesTSStorageSize} KB</p>
           </div>
         </div>
-        <h2>Performance Metrics</h2>
+        <H3 className="h3">Performance Metrics</H3>
         <div className="metrics">
-          <div>
+          <div className="metrics-card">
             <h4>Write Speed</h4>
             <p>{metrics.writeSpeed} ms</p>
           </div>
-          <div>
+          <div className="metrics-card">
             <h4>Read Speed</h4>
             <p>{metrics.readSpeed} ms</p>
           </div>
         </div>
       </div>
-      <footer>
+      <footer className="footer">
         <p>A Smart Meter System demo developed by Industry Solutions Team at MongoDB</p>
       </footer>
     </div>
