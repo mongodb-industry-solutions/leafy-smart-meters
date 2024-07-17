@@ -2,6 +2,10 @@
 
 This demo will showcase integration with MQTT providers like Cedalo, statistical analysis with change streams to identify anomalies in data and also highlighting some benefits of time series collections 
 
+## Step 0. Setup MQTT Broker
+
+First, setup your MQTT broker. You can use something like [Cedalo](https://cedalo.com/mqtt-broker-pro-mosquitto/) which has a MongoDB extension.
+
 ## Step 1. Configure Environment Variables
 
 To run this project, you will need to create two `.env` files:
