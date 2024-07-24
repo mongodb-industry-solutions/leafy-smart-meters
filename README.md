@@ -4,7 +4,7 @@ This demo will showcase integration with MQTT providers like Cedalo, statistical
 
 ## Step 0. Setup MQTT Broker
 
-First, setup your MQTT broker. You can use something like [Cedalo](https://cedalo.com/mqtt-broker-pro-mosquitto/) which has a MongoDB extension.
+First, setup your MQTT broker. You can use [Cedalo](https://cedalo.com/mqtt-broker-pro-mosquitto/) which has a MongoDB extension.
 
 ## Step 1. Configure Environment Variables
 
