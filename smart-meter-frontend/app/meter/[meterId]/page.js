@@ -10,8 +10,8 @@ export default function Meter({ params }) {
   useEffect(() => {
     const fetchMeterData = async () => {
       if (meterId) {
-        const response = await axios.get('/api/meterData');
-        setMeterData(response.data[meterId]);
+        //const response = await axios.get('/api/meterData');
+       // setMeterData(response.data[meterId]);
       }
     };
 

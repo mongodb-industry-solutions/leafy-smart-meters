@@ -7,6 +7,7 @@ const uri = process.env.MONGODB_URI;
 const dbName = process.env.DB_NAME;
 const collName1 = process.env.TRANSFORMED_COLLECTION_NAME;
 const collName2 = process.env.TRANSFORMED_TS_COLLECTION_NAME;
+const metricscoll = process.env.METRICS_COLLECTION_NAME;
 
 const client = new MongoClient(uri);
 
@@ -14,6 +15,7 @@ export async function GET() {
   try {
     await client.connect();
     const db = client.db(dbName);
+    const metricsTSCollection = db.collection(metricscoll); // TS collection
 
     // regular collections stat
     const transformedDataStats = await db.command({ collStats: collName1 });
@@ -32,6 +34,15 @@ export async function GET() {
     // storage size for time series collections
     const transformedTSStorageSize = transformedTSDataStats.storageSize / 1000;
     const anomaliesTSStorageSize = anomaliesTSDataStats.storageSize / 1000;
+
+
+    const metricsDocument = {
+      ts: new Date(),
+      ts_size: transformedTSStorageSize,
+      reg_size: transformedStorageSize
+    };
+    await metricsTSCollection.insertOne(metricsDocument);
+
 
     return new Response(JSON.stringify({
       transformedStorageSize,
