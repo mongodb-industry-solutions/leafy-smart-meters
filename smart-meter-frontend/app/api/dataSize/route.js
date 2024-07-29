@@ -7,7 +7,7 @@ const uri = process.env.MONGODB_URI;
 const dbName = process.env.DB_NAME;
 const collName1 = process.env.TRANSFORMED_COLLECTION_NAME;
 const collName2 = process.env.TRANSFORMED_TS_COLLECTION_NAME;
-const metricscoll = process.env.METRICS_COLLECTION_NAME;
+const metricscoll = process.env.METRICS_TS_COLLECTION_NAME;
 
 const client = new MongoClient(uri);
 

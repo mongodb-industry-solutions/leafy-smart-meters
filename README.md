@@ -77,11 +77,11 @@ ANOMALIES_COLLECTION_NAME=<YOUR_ANOMALIES_COLLECTION_NAME>
 TRANSFORMED_COLLECTION_NAME=<YOUR_TRANSFORMED_COLLECTION_NAME>
 TRANSFORMED_TS_COLLECTION_NAME=<YOUR_TRANSFORMED_TS_COLLECTION_NAME>
 RAW_DATA_COLLECTION_NAME=raw_data
-METRICS_COLLECTION_NAME=metrics_ts
+METRICS_TS_COLLECTION_NAME=metrics_ts
 NEXT_PUBLIC_APP_IFRAME_SRC=<YOUR_ATLAS_CHARTS_IFRAME_SRC_URL>
 ```
 
-Replace the placeholder values with your actual configuration values. You would have to create a MongoDB database and respective collections. Do note that the variables with TS in their names are time series collections. So both ANOMALIES_TS_COLLECTION_NAME and TRANSFORMED_TS_COLLECTION_NAME have to be setup as TS collections in MongoDB
+Replace the placeholder values with your actual configuration values. You would have to create a MongoDB database and respective collections. Do note that the variables with TS in their names are time series collections. So ANOMALIES_TS_COLLECTION_NAME, METRICS_TS_COLLECTION_NAME and TRANSFORMED_TS_COLLECTION_NAME have to be setup as TS collections in MongoDB
 
 ## Step 2. Run the Demo
 
