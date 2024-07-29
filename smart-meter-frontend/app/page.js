@@ -171,7 +171,7 @@ Click on Start Simulation to run the demo. The simulation will auto stop after 2
                 <h4> Data Storage Size</h4>
                 <p>{dataSize.transformedTSStorageSize} KB</p>
               </div>
-              <div className="data-size-card">
+             {/* <div className="data-size-card">
                 <Badge>Regular Collections</Badge>
                 <h4>Data Storage Size (without bucketing)</h4>
                 <p>{dataSize.anomaliesStorageSize} KB</p>
@@ -180,7 +180,7 @@ Click on Start Simulation to run the demo. The simulation will auto stop after 2
                 <Badge variant="green">Time Series Collection</Badge>
                 <h4>Data Storage Size</h4>
                 <p>{dataSize.anomaliesTSStorageSize} KB</p>
-              </div>
+              </div> */}
             </div>
             <div>
               <iframe
