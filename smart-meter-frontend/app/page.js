@@ -187,7 +187,7 @@ Click on Start Simulation to run the demo. The simulation will auto stop after 2
                 src="https://charts.mongodb.com/charts-jeffn-zsdtj/embed/charts?id=66a2582c-25f8-467c-8b3d-8f7c0c14afbd&maxDataAge=60&theme=light&autoRefresh=true"
               ></iframe>
             </div>
-            <H3 className="h3">Performance Metrics</H3>
+           {/* <H3 className="h3">Other Metrics</H3>
             <div className="metrics">
               <div className="metrics-card">
                 <h4>Write Speed</h4>
@@ -197,7 +197,7 @@ Click on Start Simulation to run the demo. The simulation will auto stop after 2
                 <h4>Read Speed</h4>
                 <p>{metrics.readSpeed} ms</p>
               </div>
-            </div>
+                  </div>*/}
           </>
         )}
       </div>

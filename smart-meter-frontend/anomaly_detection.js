@@ -57,10 +57,11 @@ async function updateSummaryAndDetectAnomalies(change) {
     frequency: parseFloat(meterData.frequency)
   };
 
-  await summaryCollection.insertOne(summaryDocument);
   await summaryTSCollection.insertOne(summaryDocument);
-
   const writeEnd = Date.now();
+  await summaryCollection.insertOne(summaryDocument);
+
+
   metrics.writeSpeed = writeEnd - writeStart;
 
   //  read speed
