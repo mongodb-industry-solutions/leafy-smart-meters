@@ -77,6 +77,8 @@ ANOMALIES_COLLECTION_NAME=<YOUR_ANOMALIES_COLLECTION_NAME>
 TRANSFORMED_COLLECTION_NAME=<YOUR_TRANSFORMED_COLLECTION_NAME>
 TRANSFORMED_TS_COLLECTION_NAME=<YOUR_TRANSFORMED_TS_COLLECTION_NAME>
 RAW_DATA_COLLECTION_NAME=raw_data
+METRICS_COLLECTION_NAME=metrics_ts
+NEXT_PUBLIC_APP_IFRAME_SRC=<YOUR_ATLAS_CHARTS_IFRAME_SRC_URL>
 ```
 
 Replace the placeholder values with your actual configuration values.
@@ -84,6 +86,13 @@ Replace the placeholder values with your actual configuration values.
 ## Step 2. Run the Demo
 
 Make sure the MQTT Broker is running
+
+
+### Integrating Atlas Charts
+To integrate Atlas Charts, you will need to create a charts dashboard on MongoDB Atlas and copy the iframe link into the `NEXT_PUBLIC_APP_IFRAME_SRC` in your .env file. Follow this [tutorial](https://www.mongodb.com/docs/charts/embedding-charts-iframe/) on how to get the iframe link from Atlas Charts.
+
+We have included a `Smart Meters.charts` file in [public](https://github.com/mongodb-industry-solutions/Leafy-Smart-Meters/tree/main/smart-meter-frontend/public) folder. You can use that. Just follow this [tutorial](https://www.mongodb.com/docs/charts/dashboards/dashboard-import-export) on how to import Charts and link the Atlas charts dashboard to your metrics_ts collection. 
+
 
 ### Install Dependencies
 - In `/smart-meter-frontend`

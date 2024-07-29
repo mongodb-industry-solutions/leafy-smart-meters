@@ -23,6 +23,7 @@ export default function Home() {
   const [metrics, setMetrics] = useState({});
   const maxAnomalies = 10; // Limit the number of anomalies displayed
   const [isRunning, setIsRunning] = useState(false); // For start/stop simulation button
+  const iframeSrc = process.env.NEXT_PUBLIC_APP_IFRAME_SRC;
 
   const handleButtonClick = async () => {
     if (isRunning) {
@@ -184,7 +185,7 @@ Click on Start Simulation to run the demo. The simulation will auto stop after 2
             <div>
               <iframe
                 className="charts"
-                src="https://charts.mongodb.com/charts-jeffn-zsdtj/embed/charts?id=66a2582c-25f8-467c-8b3d-8f7c0c14afbd&maxDataAge=60&theme=light&autoRefresh=true"
+                src={iframeSrc}
               ></iframe>
             </div>
            {/* <H3 className="h3">Other Metrics</H3>
