@@ -1,0 +1,12 @@
+name: leafy-smart-meter 
+
+services:
+  bucket-signer-retail:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: leafy-smart-meter-frontend:latest
+    ports:
+      - "4082:4082"
+    restart: always
+    container_name: leafy-smart-meter-frontend

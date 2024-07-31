@@ -1,9 +1,9 @@
-const mqtt = require('mqtt');
-const dotenv = require('dotenv');
+const mqtt = require("mqtt");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
-const BROKER_ADDRESS = process.env.BROKER_ADDRESS;
+const BROKER_ADDRESS = process.env.MQTT_BROKER;
 const TOPIC = process.env.MQTT_TOPIC;
 
 const options = {
@@ -22,16 +22,16 @@ function generateTypicalMeterData(meter_id, halfHour) {
   let baseVoltage = 220;
   let baseCurrent = 0;
   if (halfHour >= 12 && halfHour < 18) {
-    baseCurrent = 5;  // morning
+    baseCurrent = 5; // morning
   } else if (halfHour >= 36 && halfHour < 44) {
-    baseCurrent = 8;  // evening
+    baseCurrent = 8; // evening
   } else {
-    baseCurrent = 1;  // offpeak
+    baseCurrent = 1; // offpeak
   }
-  let voltage = baseVoltage + Math.random() * 2 - 1;  // small random fluctuation
-  let current = baseCurrent + Math.random() * 0.2 - 0.1;  // small random fluctuation
+  let voltage = baseVoltage + Math.random() * 2 - 1; // small random fluctuation
+  let current = baseCurrent + Math.random() * 0.2 - 0.1; // small random fluctuation
   let power = voltage * current;
-  let energy = power / 1000;  
+  let energy = power / 1000;
   let power_factor = 0.9 + Math.random() * 0.02 - 0.01;
   let frequency = 49.8 + Math.random() * 0.1 - 0.05;
 
@@ -48,7 +48,8 @@ function generateTypicalMeterData(meter_id, halfHour) {
 }
 
 function generateAnomalousMeterData(meter_id) {
-  let voltage = Math.random() > 0.5 ? 240 + Math.random() * 10 : 200 - Math.random() * 10;
+  let voltage =
+    Math.random() > 0.5 ? 240 + Math.random() * 10 : 200 - Math.random() * 10;
   let current = 15 + Math.random() * 5;
   let power = voltage * current;
   let energy = power / 1000;
@@ -78,12 +79,16 @@ function publishMeterData(meter_id) {
       halfHour = 0; // Reset after a full day
     }
     let data;
-    if (Math.random() < 0.05) {  // 5% chance to generate an anomaly
+    if (Math.random() < 0.05) {
+      // 5% chance to generate an anomaly
       data = generateAnomalousMeterData(meter_id);
       console.log(`Publishing anomalous data for meter ${meter_id}:`, data);
     } else {
       data = generateTypicalMeterData(meter_id, halfHour);
-      console.log(`Publishing typical data for meter ${meter_id} at half-hour ${halfHour}:`, data);
+      console.log(
+        `Publishing typical data for meter ${meter_id} at half-hour ${halfHour}:`,
+        data
+      );
     }
     client.publish(TOPIC, JSON.stringify(data));
     halfHour++;
@@ -92,11 +97,12 @@ function publishMeterData(meter_id) {
 }
 
 function startSimulation() {
-  if (!client || client.disconnected) { // Check if client is null or disconnected
+  if (!client || client.disconnected) {
+    // Check if client is null or disconnected
     client = mqtt.connect(BROKER_ADDRESS, options);
-
-    client.on('connect', () => {
-      console.log('Connected to MQTT Broker');
+    console.log("Connected to MQTT");
+    client.on("connect", () => {
+      console.log("Connected to MQTT Broker");
       for (let meter_id = 1; meter_id <= meters; meter_id++) {
         publishMeterData(meter_id);
       }
@@ -104,17 +110,17 @@ function startSimulation() {
       // Set timeout to stop the simulation after 5 minutes
       simulationTimeout = setTimeout(() => {
         stopSimulation();
-        console.log('Simulation automatically stopped after 2 minutes');
+        console.log("Simulation automatically stopped after 2 minutes");
       }, 2 * 60 * 1000); // 2 minutes in milliseconds
     });
 
-    client.on('error', (err) => {
-      console.error('Connection error:', err);
+    client.on("error", (err) => {
+      console.error("Connection error:", err);
       client.end();
     });
 
-    process.on('SIGINT', () => {
-      console.log('Simulator process terminated');
+    process.on("SIGINT", () => {
+      console.log("Simulator process terminated");
       if (client) {
         client.end();
         client = null;
@@ -125,25 +131,25 @@ function startSimulation() {
 }
 
 function stopSimulation() {
-  console.log('Stopping simulation...');
+  console.log("Stopping simulation...");
   if (simulationIntervals.length > 0) {
     simulationIntervals.forEach(clearInterval);
     simulationIntervals = [];
-    console.log('Simulation intervals cleared');
+    console.log("Simulation intervals cleared");
   }
   if (simulationTimeout) {
     clearTimeout(simulationTimeout);
     simulationTimeout = null;
-    console.log('Simulation timeout cleared');
+    console.log("Simulation timeout cleared");
   }
   if (client) {
-    console.log('Client is connected, disconnecting...');
+    console.log("Client is connected, disconnecting...");
     client.end(() => {
-      console.log('MQTT client disconnected');
+      console.log("MQTT client disconnected");
       client = null;
     });
   } else {
-    console.log('Client is null or already disconnected');
+    console.log("Client is null or already disconnected");
   }
 }
 

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "author": "Humza Akhtar",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4082",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 4082"
   },
   "dependencies": {
     "@leafygreen-ui/badge": "^8.1.3",
