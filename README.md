@@ -110,5 +110,6 @@ Use a browser to open the link http://localhost:3000/
 
 Click on "Start Simulation" to start the demo. You will see raw data as well as anomaly data coming in. At the bottom of the page, you will find some metrics around compression in Time Series Collection. Important to note here is that performance metrics depend on many factors including how they are calculated in the application. This example is showing just one simple method of calculating these metrics.
 
+Note that by default, the probablity of anomaly coming in is only 5%. So there will be cases where you dont see anomalies. If you want to increase the probability, just increase the value `0.05` in `Leafy-Smart-Meters/smart-meter-frontend/utils/simulation.js` line 82.
 
 
