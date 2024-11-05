@@ -6,9 +6,9 @@ This demo will showcase integration with MQTT providers like Cedalo, statistical
 
 First, setup your MQTT broker. Lets use [Cedalo](https://cedalo.com/mqtt-broker-pro-mosquitto/) which has a MongoDB extension.
 
-Install Cedalo pro Mosquitto broker from here: <https://cedalo.com/mqtt-broker-pro-mosquitto/trial-signup/?trialType=onPremise>. A more detailed manual can be found here: <https://docs.cedalo.com/mosquitto/getting-started/onprem/>
+Install Cedalo pro Mosquitto broker from [here](https://cedalo.com/mqtt-broker-pro-mosquitto/trial-signup/?trialType=onPremise). A more detailed manual can be found [here](https://docs.cedalo.com/mosquitto/getting-started/onprem/)
 
-Setup MongoDB extension using this doc <https://docs.cedalo.com/mosquitto/broker/Mosquitto%20Manual/Bridges/mosquitto-mongodb-bridge> 
+Setup MongoDB extension using this [doc](https://docs.cedalo.com/mosquitto/bridges/mongodb-bridge) 
 
 Edit your MongoDB Bridge configuration `mosquitto/data/mongodb-bridge.json` as follows
 
