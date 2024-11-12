@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+
+
+
+
 import axios from 'axios';
 import './styles.css';
 import Banner from "@leafygreen-ui/banner";
@@ -16,6 +20,7 @@ import {
 } from "@leafygreen-ui/typography";
 import Button from "@leafygreen-ui/button";
 
+
 export default function Home() {
   const [meters, setMeters] = useState({});
   const [anomalies, setAnomalies] = useState([]);
@@ -25,10 +30,12 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false); // For start/stop simulation button
   const iframeSrc = process.env.NEXT_PUBLIC_APP_IFRAME_SRC;
 
+
   const handleButtonClick = async () => {
     if (isRunning) {
       await axios.get('/api/simulation/stop');
       setIsRunning(false);
+
     } else {
       await axios.get('/api/simulation/start');
       setIsRunning(true);
@@ -36,6 +43,7 @@ export default function Home() {
       setTimeout(async () => {
         await axios.get('/api/simulation/stop');
         setIsRunning(false);
+
       }, 2 * 60 * 1000); // 2 minutes in milliseconds
     }
   };
@@ -61,19 +69,25 @@ export default function Home() {
       setMetrics(response.data);
     };
 
+
     if (isRunning) {
+      fetchDataSize();
       fetchMeterData();
       fetchAnomaliesData();
-      fetchDataSize();
       fetchMetricsData();
 
       const intervalId = setInterval(() => {
         fetchMeterData();
-        fetchAnomaliesData();
-        fetchDataSize();
-        fetchMetricsData();
       }, 5000);
-      return () => clearInterval(intervalId);
+      const intervalId1Min = setInterval(() => {
+        fetchAnomaliesData();
+        fetchMetricsData();
+        fetchDataSize();
+      }, 60000);
+      return () => {
+        clearInterval(intervalId);
+        clearInterval(intervalId1Min);
+      };
     }
   }, [isRunning]);
 

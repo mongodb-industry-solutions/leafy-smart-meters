@@ -79,15 +79,14 @@ function publishMeterData(meter_id) {
       halfHour = 0; // Reset after a full day
     }
     let data;
-    if (Math.random() < 0.05) {
-      // 5% chance to generate an anomaly
+    if (Math.random() < 0.20) {
+      // 20% chance to generate an anomaly
       data = generateAnomalousMeterData(meter_id);
-      console.log(`Publishing anomalous data for meter ${meter_id}:`, data);
+      console.log(`Publishing anomalous data for meter ${meter_id}`);
     } else {
       data = generateTypicalMeterData(meter_id, halfHour);
       console.log(
-        `Publishing typical data for meter ${meter_id} at half-hour ${halfHour}:`,
-        data
+        `Publishing typical data for meter ${meter_id} at half-hour ${halfHour}:`
       );
     }
     client.publish(TOPIC, JSON.stringify(data));
