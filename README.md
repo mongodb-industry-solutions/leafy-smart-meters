@@ -6,9 +6,9 @@ This demo will showcase integration with MQTT providers like Cedalo, statistical
 
 First, setup your MQTT broker. Lets use [Cedalo](https://cedalo.com/mqtt-broker-pro-mosquitto/) which has a MongoDB extension.
 
-Install Cedalo pro Mosquitto broker from here: <https://cedalo.com/mqtt-broker-pro-mosquitto/trial-signup/?trialType=onPremise>. A more detailed manual can be found here: <https://docs.cedalo.com/mosquitto/getting-started/onprem/>
+Install Cedalo pro Mosquitto broker from [here](https://cedalo.com/mqtt-broker-pro-mosquitto/trial-signup/?trialType=onPremise). A more detailed manual can be found [here](https://docs.cedalo.com/mosquitto/getting-started/onprem/)
 
-Setup MongoDB extension using this doc <https://docs.cedalo.com/mosquitto/broker/Mosquitto%20Manual/Bridges/mosquitto-mongodb-bridge> 
+Setup MongoDB extension using this [doc](https://docs.cedalo.com/mosquitto/bridges/mongodb-bridge) 
 
 Edit your MongoDB Bridge configuration `mosquitto/data/mongodb-bridge.json` as follows
 
@@ -110,5 +110,6 @@ Use a browser to open the link http://localhost:3000/
 
 Click on "Start Simulation" to start the demo. You will see raw data as well as anomaly data coming in. At the bottom of the page, you will find some metrics around compression in Time Series Collection. Important to note here is that performance metrics depend on many factors including how they are calculated in the application. This example is showing just one simple method of calculating these metrics.
 
+Note that by default, the probablity of anomaly coming in is only 5%. So there will be cases where you dont see anomalies. If you want to increase the probability, just increase the value `0.05` in `Leafy-Smart-Meters/smart-meter-frontend/utils/simulation.js` line 82.
 
 
