@@ -1,12 +1,13 @@
 // anomaly_detection.js
-import clientPromise from './utils/mongoClient';
-const dotenv = require('dotenv');
+import clientPromise from "./utils/mongoClient";
+const dotenv = require("dotenv");
 
 dotenv.config();
 
 const dbName = process.env.DB_NAME;
 const transformedDataCollectionName = process.env.TRANSFORMED_COLLECTION_NAME;
-const transformedDataCollectionTSName = process.env.TRANSFORMED_TS_COLLECTION_NAME;
+const transformedDataCollectionTSName =
+  process.env.TRANSFORMED_TS_COLLECTION_NAME;
 const anomaliesTSCollectionName = process.env.ANOMALIES_TS_COLLECTION_NAME;
 const anomaliesCollectionName = process.env.ANOMALIES_COLLECTION_NAME;
 const rawdata = process.env.RAW_DATA_COLLECTION_NAME;
@@ -23,7 +24,9 @@ let metrics = {
 async function updateSummaryAndDetectAnomalies(client, change) {
   const database = client.db(dbName);
   const summaryCollection = database.collection(transformedDataCollectionName);
-  const summaryTSCollection = database.collection(transformedDataCollectionTSName); // TS collection
+  const summaryTSCollection = database.collection(
+    transformedDataCollectionTSName
+  ); // TS collection
   const anomaliesCollection = database.collection(anomaliesCollectionName);
   const anomaliesTSCollection = database.collection(anomaliesTSCollectionName); // TS collection
 
@@ -34,7 +37,7 @@ async function updateSummaryAndDetectAnomalies(client, change) {
   try {
     meterData = JSON.parse(doc.data);
   } catch (error) {
-    console.error('Error parsing meter data:', error);
+    console.error("Error parsing meter data:", error);
     return;
   }
 
@@ -77,14 +80,22 @@ async function updateSummaryAndDetectAnomalies(client, change) {
     return;
   }
 
-  const metricsArray = ['voltage', 'current', 'power', 'energy', 'power_factor', 'frequency'];
+  const metricsArray = [
+    "voltage",
+    "current",
+    "power",
+    "energy",
+    "power_factor",
+    "frequency",
+  ];
 
   // Rolling averages and standard deviations
   const stats = metricsArray.reduce((acc, metric) => {
     const values = recentDataPoints.map((dp) => dp[metric]);
     const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
     const stddev = Math.sqrt(
-      values.reduce((sum, value) => sum + Math.pow(value - avg, 2), 0) / values.length
+      values.reduce((sum, value) => sum + Math.pow(value - avg, 2), 0) /
+        values.length
     );
     acc[metric] = { avg, stddev };
     return acc;
@@ -112,7 +123,7 @@ async function updateSummaryAndDetectAnomalies(client, change) {
     await anomaliesCollection.insertOne(anomaly);
     await anomaliesTSCollection.insertOne(anomaly);
 
-    console.log('Anomaly detected and stored:', anomaly);
+    console.log("Anomaly detected and stored.");
   }
 }
 
@@ -125,20 +136,20 @@ async function monitorAnomalies() {
     // Open a change stream on the collection
     const changeStream = collection.watch();
 
-    console.log('Watching for anomalies...');
+    console.log("Watching for anomalies...");
 
     // Process each change
-    changeStream.on('change', async (change) => {
-      if (change.operationType === 'insert') {
+    changeStream.on("change", async (change) => {
+      if (change.operationType === "insert") {
         await updateSummaryAndDetectAnomalies(client, change);
       }
     });
 
     // Handle process termination
-    process.on('SIGINT', () => {
-      console.log('Received SIGINT. Closing change stream.');
+    process.on("SIGINT", () => {
+      console.log("Received SIGINT. Closing change stream.");
       changeStream.close(() => {
-        console.log('Change stream closed.');
+        console.log("Change stream closed.");
         process.exit(0);
       });
     });
