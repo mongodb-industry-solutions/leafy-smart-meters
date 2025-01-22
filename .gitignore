@@ -27,7 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
+.env*
 
 # vercel
 .vercel
@@ -50,4 +50,16 @@ run-python-inference-engine.js
 todo.txt
 
 todo
+
+# Deployment
+
+docker-compose-ecs.yml
+ecs-params.yml
+Makefile
+policy.json
+
+
+# CEDALO
+*.lic
+mongodb-bridge.json
 

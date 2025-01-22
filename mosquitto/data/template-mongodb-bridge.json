@@ -1,0 +1,29 @@
+[
+    {
+        "name": "connection-to-edge",
+        "mongodb": {
+            "connectionURI": "<YOUR-MONGODB-CONNECTION-STRING>/<YOUR-DATABASE-NAME>",
+            "queueSize": 100000,
+            "reconnectMinDelay": 5,
+            "reconnectMaxDelay": 25000
+        },
+        "schemaMappings": [
+            {
+                "name": "reduced-mapping",
+                "schema": {
+                    "data": "payload",
+                    "nodeId": "hostname",
+                    "createdAt": "timestamp"
+                }
+            }
+        ],
+        "topicMappings": [
+            {
+                "name": "topic-mapping",
+                "collection": "raw_data",
+                "schema": "reduced-mapping",
+                "topics": ["smartmeter/data"]
+            }
+        ]
+    }
+]
