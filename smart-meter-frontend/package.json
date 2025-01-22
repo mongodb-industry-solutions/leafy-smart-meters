@@ -12,11 +12,11 @@
     "@leafygreen-ui/banner": "^8.0.1",
     "@leafygreen-ui/button": "^21.2.1",
     "@leafygreen-ui/typography": "^19.2.1",
-    "axios": "^0.24.0",
+    "axios": "^1.7.9",
     "dotenv": "^16.4.5",
     "mongodb": "^6.8.0",
     "mqtt": "^4.2.8",
-    "next": "latest",
+    "next": "^15.1.4",
     "react": "latest",
     "react-dom": "latest"
   }
