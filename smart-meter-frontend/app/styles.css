@@ -153,3 +153,10 @@ footer {
 footer p{
   font-size: 12px;
 }
+
+.infowizard-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}

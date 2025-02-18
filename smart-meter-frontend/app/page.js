@@ -15,6 +15,7 @@ import {
   Description,
   Link,
 } from "@leafygreen-ui/typography";
+import InfoWizard from "./components/InfoWizard";
 import Button from "@leafygreen-ui/button";
 
 export default function Home() {
@@ -25,6 +26,8 @@ export default function Home() {
   const maxAnomalies = 10; // Limit the number of anomalies displayed
   const [isRunning, setIsRunning] = useState(false); // For start/stop simulation button
   const iframeSrc = process.env.NEXT_PUBLIC_APP_IFRAME_SRC;
+  const [openHelpModal, setOpenHelpModal] = useState(false);
+
 
   const handleButtonClick = async () => {
     if (isRunning) {
@@ -97,6 +100,65 @@ export default function Home() {
           Click on Start Simulation to run the demo. The simulation will auto
           stop after 2 minutes.
         </Body>
+
+        <div className="infowizard-container">
+          <InfoWizard
+            open={openHelpModal}
+            setOpen={setOpenHelpModal}
+            tooltipText="Tell me more!"
+            iconGlyph="Wizard"
+            sections={[
+              {
+                heading: "Instructions and Talk Track",
+                content: [
+                  {
+                    heading: "Solution Overview",
+                    body: "With 90% smart meter adoption expected by 2027, MongoDB enables real-time data ingestion, storage, and anomaly detection at scale. It integrates with IoT protocols, supports efficient querying, and offers cost-effective data management with Atlas features, empowering utilities with real-time insights.",
+                  },
+                  {
+                    heading: "How to Demo",
+                    body: [
+                      "To start the demo, click on Start Simulation.",
+                      "Once the demo starts running, you will see various tables displayed:",
+                      "Recent Meters Data: This table shows simulated raw meter data coming in from the MQTT broker. This data gets refreshed every 5 seconds.",
+                      "Recent Anomalies: This demo uses MongoDB’s aggregation framework to detect anomalies in meter data. Anomalies, stored separately and listed in the Recent Anomalies table, are flagged when a reading deviates from the 24-hour rolling average by more than three times the standard deviation. This showcases MongoDB’s operational analytics capabilities.",
+                      "The demo will stop automatically after 2 minutes of execution and resets its display. You may re run the demo by clicking on Start Simulation button again",
+                    ],
+                  },
+                ],
+              },
+              {
+                heading: "Behind the Scenes",
+                content: [
+                  {
+                    heading: "Data Flow",
+                    body: "",
+                  },
+                  {
+                    image: {
+                      src: "./info.png",
+                      alt: "Architecture",
+                    },
+                  },
+                ],
+              },
+              {
+                heading: "Why MongoDB?",
+                content: [
+                  {
+                    heading: "Flexibility",
+                    body: "MongoDB’s flexible document model allows utilities to adapt to evolving data structures without complex migrations. Its dynamic schema supports various IoT devices and protocols, ensuring long-term compatibility and a future-proof solution for smart meter data management.",
+                  },
+                  {
+                    heading: "Seamless IoT Integrations",
+                    body: "With features like time series collections, change streams, aggregation frameworks, and the flexible document model, MongoDB addresses key challenges in smart meter data management, including anomaly detection, real-time analytics, and scalable data storage.",
+                  },
+                ],
+              },
+            ]}
+          />
+        </div>
+
         {!isRunning && (
           <div className="button-container">
             <Button
