@@ -79,7 +79,7 @@ function publishMeterData(meter_id) {
       halfHour = 0; // Reset after a full day
     }
     let data;
-    if (Math.random() < 0.20) {
+    if (Math.random() < 0.2) {
       // 20% chance to generate an anomaly
       data = generateAnomalousMeterData(meter_id);
       console.log(`Publishing anomalous data for meter ${meter_id}`);
@@ -99,7 +99,7 @@ function startSimulation() {
   if (!client || client.disconnected) {
     // Check if client is null or disconnected
     client = mqtt.connect(BROKER_ADDRESS, options);
-    console.log("Connected to MQTT");
+    console.log("Connected to MQTT ", BROKER_ADDRESS);
     client.on("connect", () => {
       console.log("Connected to MQTT Broker");
       for (let meter_id = 1; meter_id <= meters; meter_id++) {
@@ -114,7 +114,7 @@ function startSimulation() {
     });
 
     client.on("error", (err) => {
-      console.error("Connection error:", err);
+      console.error("MQTT Client connection error during simulation:", err);
       client.end();
     });
 

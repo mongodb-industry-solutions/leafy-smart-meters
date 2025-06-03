@@ -21,7 +21,7 @@ client.on("connect", () => {
 });
 
 client.on("error", (err) => {
-  console.error("Connection error:", err);
+  console.error("MQTT client connection error:", err);
   client.end();
 });
 
