@@ -15,45 +15,45 @@ services:
       - 8090:8090
     environment:
       CEDALO_LICENSE_FILE: /mosquitto/license/license.lic
-  management-center:
-    build:
-      context: ./management-center
-      dockerfile: Dockerfile
-    ports:
-      - 8088:8088
-    expose:
-     - 8088
-    depends_on:
-      - mosquitto
-    environment:
-      CEDALO_MC_PROXY_HOST: 0.0.0.0
+  # management-center:
+  #   build:
+  #     context: ./management-center
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8088:8088
+  #   expose:
+  #    - 8088
+  #   depends_on:
+  #     - mosquitto
+  #   environment:
+  #     CEDALO_MC_PROXY_HOST: 0.0.0.0
 
-      CEDALO_MC_USERNAME: cedalo
-      CEDALO_MC_PASSWORD: mmcisawesome
+  #     CEDALO_MC_USERNAME: cedalo
+  #     CEDALO_MC_PASSWORD: mmcisawesome
 
-      CEDALO_MC_PROXY_SRT_BASE: /management-center/config
-      CEDALO_MC_LICENSE_PATH: /management-center/config/license.lic
+  #     CEDALO_MC_PROXY_SRT_BASE: /management-center/config
+  #     CEDALO_MC_LICENSE_PATH: /management-center/config/license.lic
 
-      # CEDALO_MC_PLUGIN_LIST_PATH: /management-center/config/plugins.json
-      CEDALO_MC_PROXY_CONFIG: /management-center/config/config.json
-      CEDALO_MC_PROXY_CONFIG_CERTS: /management-center/config/certs.db
-      CEDALO_MC_PROXY_CONFIG_TOKENS: /management-center/config/tokens.json
-      CEDALO_MC_PROXY_CONFIG_USERS: /management-center/config/users.json
-      CEDALO_MC_PROXY_CONFIG_AUDIT_TRAIL: /management-center/config/audit.json
-      CEDALO_MC_BROKER_CONNECTION_MQTT_EXISTS_MAPPING: mosquitto:true
-      CEDALO_MC_BROKER_CONNECTION_MQTTS_EXISTS_MAPPING: mosquitto:false
-      CEDALO_MC_BROKER_CONNECTION_WS_EXISTS_MAPPING: mosquitto:false
-      CEDALO_MC_BROKER_CONNECTION_HOST_MAPPING: mosquitto:localhost
+  #     # CEDALO_MC_PLUGIN_LIST_PATH: /management-center/config/plugins.json
+  #     CEDALO_MC_PROXY_CONFIG: /management-center/config/config.json
+  #     CEDALO_MC_PROXY_CONFIG_CERTS: /management-center/config/certs.db
+  #     CEDALO_MC_PROXY_CONFIG_TOKENS: /management-center/config/tokens.json
+  #     CEDALO_MC_PROXY_CONFIG_USERS: /management-center/config/users.json
+  #     CEDALO_MC_PROXY_CONFIG_AUDIT_TRAIL: /management-center/config/audit.json
+  #     CEDALO_MC_BROKER_CONNECTION_MQTT_EXISTS_MAPPING: mosquitto:true
+  #     CEDALO_MC_BROKER_CONNECTION_MQTTS_EXISTS_MAPPING: mosquitto:false
+  #     CEDALO_MC_BROKER_CONNECTION_WS_EXISTS_MAPPING: mosquitto:false
+  #     CEDALO_MC_BROKER_CONNECTION_HOST_MAPPING: mosquitto:localhost
 
-      CEDALO_MC_DATA_DIRECTORY_PATH: /management-center/config
+  #     CEDALO_MC_DATA_DIRECTORY_PATH: /management-center/config
 
-      CEDALO_MC_MODE: offline
-    command: >
-      /bin/sh -c "
-        while ! nc -z mosquitto 1883;
-        do
-          echo 'Waiting for mosquitto';
-          sleep 1;
-        done;
-        cd /management-center; exec ./mmc
-      "
+  #     CEDALO_MC_MODE: offline
+  #   command: >
+  #     /bin/sh -c "
+  #       while ! nc -z mosquitto 1883;
+  #       do
+  #         echo 'Waiting for mosquitto';
+  #         sleep 1;
+  #       done;
+  #       cd /management-center; exec ./mmc
+  #     "

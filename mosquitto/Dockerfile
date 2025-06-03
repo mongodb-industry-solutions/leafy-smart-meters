@@ -1,4 +1,4 @@
-FROM registry.cedalo.com/mosquitto/mosquitto:2.8
+FROM registry.cedalo.com/mosquitto/mosquitto:3.0
 
 # Copy the configuration file
 COPY . /mosquitto

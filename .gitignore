@@ -57,7 +57,7 @@ docker-compose-ecs.yml
 ecs-params.yml
 Makefile
 policy.json
-
+task-def.json
 
 # CEDALO
 *.lic
