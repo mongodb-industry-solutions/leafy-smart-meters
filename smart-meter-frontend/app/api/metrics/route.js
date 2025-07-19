@@ -1,4 +1,4 @@
-const { getMetrics } = require('../../../anomaly_detection');
+import { getMetrics } from '../../../anomaly_detection.js';
 
 export async function GET() {
   const metrics = getMetrics();
