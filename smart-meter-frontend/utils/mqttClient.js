@@ -12,7 +12,7 @@ if (USE_MQTT_BROKER) {
     password: process.env.MQTT_PASSWORD,
   };
 
-  const client = mqtt.connect(process.env.MQTT_BROKER, options);
+  client = mqtt.connect(process.env.MQTT_BROKER, options);
 
   client.on("connect", () => {
     //console.log('Connected to MQTT Broker');
