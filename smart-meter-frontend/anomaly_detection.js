@@ -1,8 +1,8 @@
 // anomaly_detection.js
-import clientPromise from "./utils/mongoClient";
-const dotenv = require("dotenv");
-
+import dotenv from "dotenv";
 dotenv.config();
+
+import clientPromise from "./utils/mongoClient.js";
 
 const dbName = process.env.DB_NAME;
 const transformedDataCollectionName = process.env.TRANSFORMED_COLLECTION_NAME;
@@ -161,4 +161,4 @@ async function monitorAnomalies() {
 monitorAnomalies().catch(console.error);
 
 // Export metrics for API endpoint
-module.exports.getMetrics = () => metrics;
+export const getMetrics = () => metrics;

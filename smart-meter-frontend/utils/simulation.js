@@ -1,10 +1,14 @@
-const mqtt = require("mqtt");
-const dotenv = require("dotenv");
+import mqtt from "mqtt";
+import dotenv from "dotenv";
+import clientPromise from "./mongoClient.js";
 
 dotenv.config();
 
 const BROKER_ADDRESS = process.env.MQTT_BROKER;
 const TOPIC = process.env.MQTT_TOPIC;
+const USE_MQTT_BROKER = process.env.USE_MQTT_BROKER !== 'false';
+const DB_NAME = process.env.DB_NAME;
+const RAW_DATA_COLLECTION_NAME = process.env.RAW_DATA_COLLECTION_NAME;
 
 const options = {
   username: process.env.MQTT_USERNAME,
@@ -68,10 +72,26 @@ function generateAnomalousMeterData(meter_id) {
   };
 }
 
+async function insertDirectToMongoDB(data) {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+    const collection = db.collection(RAW_DATA_COLLECTION_NAME);
+    
+    await collection.insertOne({
+      data: JSON.stringify(data),
+      timestamp: new Date()
+    });
+    console.log(`Direct MongoDB insertion for meter ${data.meter_id}`);
+  } catch (error) {
+    console.error("Error inserting data directly to MongoDB:", error);
+  }
+}
+
 function publishMeterData(meter_id) {
   let halfHour = 0;
-  const interval = setInterval(() => {
-    if (!client || client.disconnected) {
+  const interval = setInterval(async () => {
+    if (USE_MQTT_BROKER && (!client || client.disconnected)) {
       clearInterval(interval);
       return;
     }
@@ -89,41 +109,65 @@ function publishMeterData(meter_id) {
         `Publishing typical data for meter ${meter_id} at half-hour ${halfHour}:`
       );
     }
-    client.publish(TOPIC, JSON.stringify(data));
+    
+    if (USE_MQTT_BROKER) {
+      client.publish(TOPIC, JSON.stringify(data));
+    } else {
+      await insertDirectToMongoDB(data);
+    }
     halfHour++;
   }, simulationDelay);
   simulationIntervals.push(interval);
 }
 
 function startSimulation() {
-  if (!client || client.disconnected) {
-    // Check if client is null or disconnected
-    client = mqtt.connect(BROKER_ADDRESS, options);
-    console.log("Connected to MQTT ", BROKER_ADDRESS);
-    client.on("connect", () => {
-      console.log("Connected to MQTT Broker");
-      for (let meter_id = 1; meter_id <= meters; meter_id++) {
-        publishMeterData(meter_id);
-      }
+  console.log(`Starting simulation in ${USE_MQTT_BROKER ? 'MQTT' : 'Direct'} mode`);
+  
+  if (USE_MQTT_BROKER) {
+    // MQTT Mode
+    if (!client || client.disconnected) {
+      client = mqtt.connect(BROKER_ADDRESS, options);
+      console.log("Connected to MQTT ", BROKER_ADDRESS);
+      client.on("connect", () => {
+        console.log("Connected to MQTT Broker");
+        for (let meter_id = 1; meter_id <= meters; meter_id++) {
+          publishMeterData(meter_id);
+        }
 
-      // Set timeout to stop the simulation after 5 minutes
-      simulationTimeout = setTimeout(() => {
-        stopSimulation();
-        console.log("Simulation automatically stopped after 2 minutes");
-      }, 2 * 60 * 1000); // 2 minutes in milliseconds
-    });
+        simulationTimeout = setTimeout(() => {
+          stopSimulation();
+          console.log("Simulation automatically stopped after 2 minutes");
+        }, 2 * 60 * 1000);
+      });
 
-    client.on("error", (err) => {
-      console.error("MQTT Client connection error during simulation:", err);
-      client.end();
-    });
+      client.on("error", (err) => {
+        console.error("MQTT Client connection error during simulation:", err);
+        client.end();
+      });
+
+      process.on("SIGINT", () => {
+        console.log("Simulator process terminated");
+        if (client) {
+          client.end();
+          client = null;
+        }
+        process.exit(0);
+      });
+    }
+  } else {
+    // Direct MongoDB Mode
+    console.log("Starting direct MongoDB insertion mode");
+    for (let meter_id = 1; meter_id <= meters; meter_id++) {
+      publishMeterData(meter_id);
+    }
+
+    simulationTimeout = setTimeout(() => {
+      stopSimulation();
+      console.log("Simulation automatically stopped after 2 minutes");
+    }, 2 * 60 * 1000);
 
     process.on("SIGINT", () => {
       console.log("Simulator process terminated");
-      if (client) {
-        client.end();
-        client = null;
-      }
       process.exit(0);
     });
   }
@@ -152,4 +196,4 @@ function stopSimulation() {
   }
 }
 
-module.exports = { startSimulation, stopSimulation };
+export { startSimulation, stopSimulation };
