@@ -23,5 +23,5 @@ envSecrets:
   # MongoDB Configuration (optional for demo mode)
   # If not provided, app will run with simulated data only
   MONGODB_URI: leafy-smart-meters-staging
-  MONGODB_DATABASE: leafy-smart-meters-staging
-  NEXT_PUBLIC_CHART_BASE_URL: leafy-smart-meters-staging
+  DB_NAME: leafy-smart-meters-staging
+  NEXT_PUBLIC_APP_IFRAME_SRC=: leafy-smart-meters-staging
