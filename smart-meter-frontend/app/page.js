@@ -25,7 +25,7 @@ export default function Home() {
   const [metrics, setMetrics] = useState({});
   const maxAnomalies = 10; // Limit the number of anomalies displayed
   const [isRunning, setIsRunning] = useState(false); // For start/stop simulation button
-  const iframeSrc = process.env.NEXT_PUBLIC_APP_IFRAME_SRC;
+  const [iframeSrc, setIframeSrc] = useState(null);
   const [openHelpModal, setOpenHelpModal] = useState(false);
 
 
@@ -45,6 +45,17 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Fetch iframe URL from server at runtime
+    const fetchChartConfig = async () => {
+      try {
+        const response = await axios.get("/api/chart-config");
+        setIframeSrc(response.data.iframeSrc);
+      } catch (error) {
+        console.error("Failed to fetch chart config:", error);
+      }
+    };
+    fetchChartConfig();
+
     const fetchMeterData = async () => {
       const response = await axios.get("/api/meterData");
       setMeters(response.data);
