@@ -1,0 +1,27 @@
+# Leafy Smart Meters - Staging Environment Configuration
+# Demo Mode: Running without MQTT broker
+
+env:
+  PORT: "8080"
+  # Demo mode configuration
+  USE_MQTT_BROKER: false
+
+  ANOMALIES_TS_COLLECTION_NAME: anomalies_ts
+  ANOMALIES_COLLECTION_NAME: anomalies
+  TRANSFORMED_COLLECTION_NAME: transformed_data
+  TRANSFORMED_TS_COLLECTION_NAME: transformed_data_ts
+  RAW_DATA_COLLECTION_NAME: raw_data
+  METRICS_TS_COLLECTION_NAME: metrics_ts
+
+  MQTT_BROKER: mqtt://mosquitto:1883
+  # MQTT_BROKER="mqtt://localhost:1883"
+  MQTT_USERNAME: dummy
+  MQTT_PASSWORD: dummy
+  MQTT_TOPIC: smartmeter/data
+
+envSecrets:
+  # MongoDB Configuration (optional for demo mode)
+  # If not provided, app will run with simulated data only
+  MONGODB_URI: leafy-smart-meters-staging
+  MONGODB_DATABASE: leafy-smart-meters-staging
+  NEXT_PUBLIC_CHART_BASE_URL: leafy-smart-meters-staging

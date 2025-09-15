@@ -63,3 +63,5 @@ task-def.json
 *.lic
 mongodb-bridge.json
 
+cicd-kanopy/
+CLAUDE.md

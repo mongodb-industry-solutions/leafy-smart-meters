@@ -37,8 +37,8 @@ COPY --from=builder /app/.env.production ./.env.production
 
 USER nextjs
 
-EXPOSE 4082
+EXPOSE 8080
 
-ENV PORT=4082
+ENV PORT=8080
 
 CMD ["npm", "start"]
