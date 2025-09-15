@@ -36,15 +36,15 @@ steps:
       release: leafy-smart-meters
       values_files: ["environments/staging.yaml"]
       values:
-        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}",
-        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/smart-meter-staging",
-        - "ingress.enabled=true",
-        - "ingress.hosts[0]=leafy-smart-meters.industrysolutions.staging.corp.mongodb.com",
-        - "mesh.enabled=true",
-        - "resources.limits.cpu=1000m",
-        - "resources.limits.memory=1024Mi",
-        - "resources.requests.cpu=250m",
-        - "resources.requests.memory=256Mi",
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/smart-meter-staging"
+        - "ingress.enabled=true"
+        - "ingress.hosts[0]=leafy-smart-meters.industrysolutions.staging.corp.mongodb.com"
+        - "mesh.enabled=true"
+        - "resources.limits.cpu=1000m"
+        - "resources.limits.memory=1024Mi"
+        - "resources.requests.cpu=250m"
+        - "resources.requests.memory=256Mi"
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
         from_secret: staging_kubernetes_token
