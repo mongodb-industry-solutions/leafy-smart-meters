@@ -11,7 +11,8 @@ const rawDataCollectionName = process.env.RAW_DATA_COLLECTION_NAME;
 let meterData = {};
 
 // MQTT mode: Listen to MQTT messages
-if (USE_MQTT_BROKER) {
+
+if (USE_MQTT_BROKER && client) {
   client.on('message', (topic, message) => {
     const data = JSON.parse(message.toString());
     meterData[data.meter_id] = data;
@@ -23,6 +24,12 @@ if (USE_MQTT_BROKER) {
 async function fetchMeterDataFromMongoDB() {
   try {
     const client = await clientPromise;
+
+    // Return empty data if MongoDB is not configured
+    if (!client) {
+      console.log("MongoDB not configured. Returning empty data.");
+      return {};
+    }
     const db = client.db(dbName);
     const collection = db.collection(rawDataCollectionName);
     

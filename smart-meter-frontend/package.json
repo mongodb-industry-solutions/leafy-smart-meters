@@ -4,9 +4,9 @@
   "author": "Humza Akhtar",
   "type" : "module",
   "scripts": {
-    "dev": "next dev -p 4082",
+    "dev": "next dev -p ${PORT:-4082}",
     "build": "next build",
-    "start": "next start -p 4082"
+    "start": "next start -p ${PORT:-8080}"
   },
   "dependencies": {
     "@leafygreen-ui/badge": "^9.0.2",
