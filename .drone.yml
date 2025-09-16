@@ -89,6 +89,7 @@ steps:
       chart_version: 4.25.0
       add_repos: [mongodb=https://10gen.github.io/helm-charts]
       namespace: industrysolutions
+      release: leafy-smart-meters
       values_files: ["environments/production.yaml"]
       values: 
         - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
