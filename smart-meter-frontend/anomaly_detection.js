@@ -130,6 +130,13 @@ async function updateSummaryAndDetectAnomalies(client, change) {
 async function monitorAnomalies() {
   try {
     const client = await clientPromise;
+
+    // Skip monitoring if no MongoDB connection
+    if (!client) {
+      console.log("MongoDB not configured. Skipping anomaly monitoring.");
+      return;
+    }
+
     const database = client.db(dbName);
     const collection = database.collection(rawdata);
 
@@ -158,7 +165,10 @@ async function monitorAnomalies() {
   }
 }
 
-monitorAnomalies().catch(console.error);
+// Only start monitoring if we're not in build mode
+if (process.env.NODE_ENV !== 'production' || process.env.MONGODB_URI) {
+  monitorAnomalies().catch(console.error);
+}
 
 // Export metrics for API endpoint
 export const getMetrics = () => metrics;
