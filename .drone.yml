@@ -53,6 +53,37 @@ steps:
         - staging
       event:
         - push
+  
+  - name: run-e2e-tests
+    image: public.ecr.aws/kanopy/drone-kubectl:latest
+    environment:
+      KUBECONFIG_DATA:
+        from_secret: staging_kubernetes_token
+    commands:
+      - export JOB_NAME="smart-meters-e2e-test-${DRONE_BUILD_NUMBER}"
+      # Create job from template
+      - sed "s/REPLACE_JOB_NAME/$JOB_NAME/g" k8s/e2e-job-template.yaml | kubectl apply -f -
+      # Wait for job to complete (max 15 minutes)
+      - echo "Waiting for E2E tests to complete..."
+      - kubectl wait --for=condition=complete --timeout=900s job/$JOB_NAME -n industrysolutions || kubectl wait --for=condition=failed --timeout=900s job/$JOB_NAME -n industrysolutions
+      # Get the job status
+      - kubectl get job $JOB_NAME -n industrysolutions
+      # Get logs from the test container
+      - echo "Test execution logs:"
+      - kubectl logs job/$JOB_NAME -n industrysolutions -c e2e-tests --tail=100
+      # Check if job succeeded
+      - |
+        JOB_STATUS=$(kubectl get job $JOB_NAME -n industrysolutions -o jsonpath='{.status.conditions[?(@.type=="Complete")].status}')
+        if [ "$JOB_STATUS" != "True" ]; then
+          echo "E2E tests failed!"
+          exit 1
+        fi
+        echo "E2E tests passed successfully!"
+    when:
+      branch:
+        - staging
+      event:
+        - push
 
 ---
 kind: pipeline

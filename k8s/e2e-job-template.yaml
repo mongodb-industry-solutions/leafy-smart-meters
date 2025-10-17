@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: REPLACE_JOB_NAME
+  namespace: industrysolutions
+spec:
+  ttlSecondsAfterFinished: 300
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: e2e-tests
+        image: 795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/e2e-tests:latest
+        imagePullPolicy: Always
+        command: ["npm", "run", "test:smart-meters"]
+        env:
+        - name: APP_NAME
+          value: "smart-meters"
+        - name: ENV_NAME
+          value: "staging"
+        - name: SLACK_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name: e2e-secrets
+              key: slack-webhook-url
+              optional: true
+        - name: S3_BUCKET_NAME
+          value: "leafy-bucket"
+        - name: S3_REGION
+          value: "us-east-1"
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: e2e-secrets
+              key: aws-access-key-id
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: e2e-secrets
+              key: aws-secret-access-key
+              optional: true
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
