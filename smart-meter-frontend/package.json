@@ -21,7 +21,7 @@
     "dotenv": "^16.4.7",
     "mongodb": "^6.13.0",
     "mqtt": "^5.10.3",
-    "next": "^15.4.10",
+    "next": "^16.1.5",
     "react": "latest",
     "react-dom": "latest"
   },
