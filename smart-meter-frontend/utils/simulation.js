@@ -18,6 +18,15 @@ const options = {
 const meters = 5; // Start publishing data for 5 meters
 const simulationDelay = 5000; // Publish data every 5 seconds
 
+// Fixed locations per meter (NYC area)
+const METER_LOCATIONS = {
+  1: { type: "Point", coordinates: [-73.9857, 40.7484] }, // Midtown Manhattan
+  2: { type: "Point", coordinates: [-73.9654, 40.7681] }, // Upper East Side
+  3: { type: "Point", coordinates: [-73.9991, 40.7247] }, // Lower Manhattan
+  4: { type: "Point", coordinates: [-73.9936, 40.6962] }, // Brooklyn Heights
+  5: { type: "Point", coordinates: [-73.9442, 40.7475] }, // Long Island City
+};
+
 let simulationIntervals = [];
 let simulationTimeout;
 let client = null; // Ensure client is declared here and initialized as null
@@ -48,6 +57,7 @@ function generateTypicalMeterData(meter_id, halfHour) {
     energy: energy.toFixed(2),
     power_factor: power_factor.toFixed(2),
     frequency: frequency.toFixed(2),
+    location: METER_LOCATIONS[meter_id],
   };
 }
 
@@ -69,6 +79,7 @@ function generateAnomalousMeterData(meter_id) {
     energy: energy.toFixed(2),
     power_factor: power_factor.toFixed(2),
     frequency: frequency.toFixed(2),
+    location: METER_LOCATIONS[meter_id],
   };
 }
 

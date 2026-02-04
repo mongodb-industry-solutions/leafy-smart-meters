@@ -16,6 +16,7 @@ import {
   Link,
 } from "@leafygreen-ui/typography";
 import InfoWizard from "./components/InfoWizard";
+import TimeSeriesAnalysis from "./components/TimeSeriesAnalysis";
 import Button from "@leafygreen-ui/button";
 
 export default function Home() {
@@ -24,10 +25,10 @@ export default function Home() {
   const [dataSize, setDataSize] = useState({});
   const [metrics, setMetrics] = useState({});
   const maxAnomalies = 10; // Limit the number of anomalies displayed
-  const [isRunning, setIsRunning] = useState(false); // For start/stop simulation button
+  const [isRunning, setIsRunning] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [iframeSrc, setIframeSrc] = useState(null);
   const [openHelpModal, setOpenHelpModal] = useState(false);
-
 
   const handleButtonClick = async () => {
     if (isRunning) {
@@ -36,11 +37,12 @@ export default function Home() {
     } else {
       await axios.get("/api/simulation/start");
       setIsRunning(true);
-      // Automatically stop the simulation after 5 minutes
+      setHasStarted(true);
+      // Automatically stop the simulation after 2 minutes
       setTimeout(async () => {
         await axios.get("/api/simulation/stop");
         setIsRunning(false);
-      }, 2 * 60 * 1000); // 2 minutes in milliseconds
+      }, 2 * 60 * 1000);
     }
   };
 
@@ -63,8 +65,8 @@ export default function Home() {
 
     const fetchAnomaliesData = async () => {
       const response = await axios.get("/api/anomalies");
-      console.log("response", response);
-      setAnomalies(response.data.slice(0, maxAnomalies));
+      const data = Array.isArray(response.data) ? response.data : [];
+      setAnomalies(data.slice(0, maxAnomalies));
     };
 
     const fetchDataSize = async () => {
@@ -170,19 +172,22 @@ export default function Home() {
           />
         </div>
 
-        {!isRunning && (
-          <div className="button-container">
-            <Button
-              className="simulation-button"
-              variant="baseGreen"
-              onClick={handleButtonClick}
-            >
-              Start Simulation
-            </Button>
-          </div>
-        )}
+        <div className="button-container">
+          <Button
+            className="simulation-button"
+            variant={isRunning ? "dangerOutline" : "baseGreen"}
+            onClick={handleButtonClick}
+          >
+            {isRunning ? "Stop Simulation" : "Start Simulation"}
+          </Button>
+          {isRunning && (
+            <Body style={{ marginLeft: 12, fontSize: 13, color: "#889397" }}>
+              Simulation running — auto-stops after 2 minutes
+            </Body>
+          )}
+        </div>
 
-        {isRunning && (
+        {hasStarted && (
           <>
             <H3 className="h3">Recent Meter Data</H3>
             <table>
@@ -210,7 +215,7 @@ export default function Home() {
                     <td>{meter.energy}</td>
                     <td>{meter.power_factor}</td>
                     <td>{meter.frequency}</td>
-                    <td>{meter.location || "N/A"}</td>
+                    <td style={{whiteSpace: "nowrap"}}>{meter.location ? `${meter.location.coordinates[1].toFixed(4)}, ${meter.location.coordinates[0].toFixed(4)}` : "N/A"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -236,7 +241,7 @@ export default function Home() {
                 <tbody>
                   {anomalies.map((anomaly) => (
                     <tr key={anomaly._id}>
-                      <td>{anomaly.meter_id}</td>
+                      <td>{anomaly.metadata?.meter_id ?? anomaly.meter_id}</td>
                       <td>{new Date(anomaly.timestamp).toLocaleString()}</td>
                       <td>{anomaly.anomalies.join(", ")}</td>
                     </tr>
@@ -277,6 +282,7 @@ export default function Home() {
             <div>
               <iframe className="charts" src={iframeSrc}></iframe>
             </div>
+            <TimeSeriesAnalysis />
             {/* <H3 className="h3">Other Metrics</H3>
             <div className="metrics">
               <div className="metrics-card">

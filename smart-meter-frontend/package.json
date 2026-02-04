@@ -2,7 +2,7 @@
   "name": "smart-meter-frontend",
   "version": "1.0.0",
   "author": "Humza Akhtar",
-  "type" : "module",
+  "type": "module",
   "scripts": {
     "dev": "next dev -p ${PORT:-4082}",
     "build": "next build",
@@ -23,7 +23,8 @@
     "mqtt": "^5.10.3",
     "next": "^15.4.10",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
     "license-checker": "^25.0.1"
