@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const dbName = process.env.DB_NAME;
-const tsCollection = process.env.TRANSFORMED_TS_COLLECTION_NAME;
+const stdCollection = process.env.TRANSFORMED_COLLECTION_NAME;
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -37,7 +37,7 @@ export async function GET(request) {
   try {
     const client = await clientPromise;
     const db = client.db(dbName);
-    const results = await db.collection(tsCollection).aggregate(pipeline).toArray();
+    const results = await db.collection(stdCollection).aggregate(pipeline).toArray();
 
     return Response.json({ pipeline, results });
   } catch (error) {

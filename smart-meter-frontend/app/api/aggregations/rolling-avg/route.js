@@ -11,8 +11,6 @@ export async function GET(request) {
 
   const pipeline = [
     { $match: { "metadata.meter_id": meterId } },
-    { $sort: { timestamp: 1 } },
-    { $limit: 50 },
     {
       $setWindowFields: {
         partitionBy: "$metadata.meter_id",
@@ -34,6 +32,7 @@ export async function GET(request) {
         meter_id: "$metadata.meter_id",
       },
     },
+    { $limit: 50 },
   ];
 
   try {
