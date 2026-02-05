@@ -67,3 +67,4 @@ mongodb-bridge.json
 
 cicd-kanopy/
 CLAUDE.md
+security_check.sh
