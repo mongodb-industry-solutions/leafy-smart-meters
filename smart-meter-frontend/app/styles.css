@@ -144,6 +144,26 @@ tr:hover {
   min-height: 200px;
   max-height: 400px;
   overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.anomalies-table-container table {
+  margin: 0;
+  box-shadow: none;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.anomalies-table-container th {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.anomalies-table-container tr:first-child th {
+  border-top: none;
 }
 
 .banner{
