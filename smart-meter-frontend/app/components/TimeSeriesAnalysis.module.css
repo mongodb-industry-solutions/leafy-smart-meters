@@ -111,6 +111,16 @@
   flex-shrink: 0;
 }
 
+.originalDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #00684A;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  flex-shrink: 0;
+}
+
 /* Extremes tab */
 .extremesGrid {
   display: grid;

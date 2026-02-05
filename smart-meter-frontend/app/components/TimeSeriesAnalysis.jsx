@@ -322,7 +322,16 @@ export default function TimeSeriesAnalysis() {
                                   />
                                 );
                               }
-                              return null;
+                              return (
+                                <circle
+                                  cx={cx}
+                                  cy={cy}
+                                  r={4}
+                                  fill="#00684A"
+                                  stroke="#fff"
+                                  strokeWidth={1}
+                                />
+                              );
                             }}
                           />
                           <Line
@@ -331,13 +340,37 @@ export default function TimeSeriesAnalysis() {
                             dataKey="current"
                             stroke="#016BF8"
                             name="Current (Linear)"
-                            dot={false}
+                            dot={(props) => {
+                              const { cx, cy, payload } = props;
+                              if (payload.isSynthetic) {
+                                return (
+                                  <circle
+                                    cx={cx}
+                                    cy={cy}
+                                    r={3}
+                                    fill="#FF6B6B"
+                                    stroke="#FF6B6B"
+                                  />
+                                );
+                              }
+                              return (
+                                <circle
+                                  cx={cx}
+                                  cy={cy}
+                                  r={4}
+                                  fill="#016BF8"
+                                  stroke="#fff"
+                                  strokeWidth={1}
+                                />
+                              );
+                            }}
                           />
                         </LineChart>
                       </ResponsiveContainer>
                       <Body className={styles.chartLegend}>
-                        <span className={styles.syntheticDot}></span> Red dots
-                        indicate synthetic (gap-filled) data points
+                        <span className={styles.originalDot}></span> Original data points
+                        <span style={{ margin: '0 8px' }}>|</span>
+                        <span className={styles.syntheticDot}></span> Gap-filled (synthetic) data points
                       </Body>
                     </>
                   ) : (

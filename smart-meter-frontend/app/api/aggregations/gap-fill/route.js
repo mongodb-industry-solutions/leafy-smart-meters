@@ -74,7 +74,7 @@ export async function GET(request) {
           },
         },
       },
-      { $limit: 50 },
+      { $limit: 100 },
       {
         $project: {
           _id: 0,
