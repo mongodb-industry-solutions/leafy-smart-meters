@@ -91,6 +91,7 @@
 
 .resultBlock {
   margin-bottom: 20px;
+  min-height: 100px;
 }
 
 .chartLegend {

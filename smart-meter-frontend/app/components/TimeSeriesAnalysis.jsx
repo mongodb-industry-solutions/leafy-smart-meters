@@ -383,75 +383,85 @@ export default function TimeSeriesAnalysis() {
                   </pre>
                 </div>
                 <div className={styles.resultBlock}>
-                  <Subtitle>
-                    Results ({extremes.data.results.length} meters)
-                  </Subtitle>
-                  {extremes.data.results.length > 0 ? (
-                    <div className={styles.extremesGrid}>
-                      {extremes.data.results.map((meter) => (
-                        <div key={meter.meter_id} className={styles.extremeCard}>
-                          <h4>Meter {meter.meter_id}</h4>
-                          <table className={styles.extremeTable}>
-                            <tbody>
-                              <tr>
-                                <td>First 3</td>
-                                <td>
-                                  {meter.first_voltages
-                                    ?.map((v) => v?.toFixed(1))
-                                    .join(", ")}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Last 3</td>
-                                <td>
-                                  {meter.last_voltages
-                                    ?.map((v) => v?.toFixed(1))
-                                    .join(", ")}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Min</td>
-                                <td>
-                                  {meter.min_voltages
-                                    ?.map((v) => v?.toFixed(2))
-                                    .join(", ")}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Max</td>
-                                <td>
-                                  {meter.max_voltages
-                                    ?.map((v) => v?.toFixed(2))
-                                    .join(", ")}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Bottom 3</td>
-                                <td>
-                                  {meter.bottom_voltages
-                                    ?.map((v) => v?.toFixed(2))
-                                    .join(", ")}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Top 3</td>
-                                <td>
-                                  {meter.top_voltages
-                                    ?.map((v) => v?.toFixed(2))
-                                    .join(", ")}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <Body>
-                      No data available. Ensure the simulation has been running
-                      to generate data.
-                    </Body>
-                  )}
+                  {(() => {
+                    // Filter to only valid meters (1-5) and exclude null/undefined meter_id
+                    const validMeters = extremes.data.results.filter(
+                      (m) => m.meter_id != null && m.meter_id >= 1 && m.meter_id <= 5
+                    );
+                    return (
+                      <>
+                        <Subtitle>
+                          Results ({validMeters.length} meters)
+                        </Subtitle>
+                        {validMeters.length > 0 ? (
+                          <div className={styles.extremesGrid}>
+                            {validMeters.map((meter) => (
+                              <div key={meter.meter_id} className={styles.extremeCard}>
+                                <h4>Meter {meter.meter_id}</h4>
+                                <table className={styles.extremeTable}>
+                                  <tbody>
+                                    <tr>
+                                      <td>First 3</td>
+                                      <td>
+                                        {meter.first_voltages
+                                          ?.map((v) => v?.toFixed(1))
+                                          .join(", ")}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Last 3</td>
+                                      <td>
+                                        {meter.last_voltages
+                                          ?.map((v) => v?.toFixed(1))
+                                          .join(", ")}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Min</td>
+                                      <td>
+                                        {meter.min_voltages
+                                          ?.map((v) => v?.toFixed(2))
+                                          .join(", ")}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Max</td>
+                                      <td>
+                                        {meter.max_voltages
+                                          ?.map((v) => v?.toFixed(2))
+                                          .join(", ")}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Bottom 3</td>
+                                      <td>
+                                        {meter.bottom_voltages
+                                          ?.map((v) => v?.toFixed(2))
+                                          .join(", ")}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Top 3</td>
+                                      <td>
+                                        {meter.top_voltages
+                                          ?.map((v) => v?.toFixed(2))
+                                          .join(", ")}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            ))}
+                          </div>
+                          ) : (
+                            <Body>
+                              No data available. Ensure the simulation has been running
+                              to generate data.
+                            </Body>
+                          )}
+                        </>
+                      );
+                    })()}
                 </div>
               </>
             )}
