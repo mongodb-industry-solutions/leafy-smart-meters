@@ -1,6 +1,6 @@
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: white;
+  background-color: #F9FAFB;
   color: #001E2B;
   margin: 0;
   padding: 0;
@@ -36,6 +36,11 @@ h1 {
 
 .banner-fullwidth {
   margin: 20px 0;
+  font-size: 14px;
+}
+
+.banner-right {
+  margin-bottom: 20px;
   font-size: 14px;
 }
 

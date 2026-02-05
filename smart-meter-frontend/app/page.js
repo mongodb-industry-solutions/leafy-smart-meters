@@ -213,13 +213,6 @@ export default function Home() {
 
         {hasStarted && (
           <>
-            <Banner className="banner-fullwidth">
-              <b>MongoDB's Time Series </b>offers significant benefits,
-              including a high compression ratio and fast read/write operations.
-              <a href="https://www.mongodb.com/products/capabilities/time-series">
-                Find out more
-              </a>
-            </Banner>
             <div className="main-content">
               {/* Left Column */}
               <div className="left-column">
@@ -288,6 +281,13 @@ export default function Home() {
 
             {/* Right Column */}
             <div className="right-column">
+              <Banner className="banner-right">
+                <b>MongoDB's Time Series </b>offers significant benefits,
+                including a high compression ratio and fast read/write operations.
+                <a href="https://www.mongodb.com/products/capabilities/time-series">
+                  Find out more
+                </a>
+              </Banner>
               <div className="data-size">
                 <div className="data-size-card">
                   <Badge>Regular Collection</Badge>
