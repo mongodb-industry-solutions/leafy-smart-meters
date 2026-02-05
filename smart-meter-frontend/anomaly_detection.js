@@ -44,7 +44,10 @@ async function updateSummaryAndDetectAnomalies(client, change) {
   // Write speed
   const writeStart = Date.now();
   const summaryDocument = {
-    meter_id: meterData.meter_id,
+    metadata: {
+      meter_id: meterData.meter_id,
+      ...(meterData.location && { location: meterData.location }),
+    },
     timestamp: new Date(meterData.timestamp * 1000),
     voltage: parseFloat(meterData.voltage),
     current: parseFloat(meterData.current),
@@ -63,7 +66,7 @@ async function updateSummaryAndDetectAnomalies(client, change) {
   // Read speed
   const readStart = Date.now();
   const recentDataPoints = await summaryCollection
-    .find({ meter_id: meterData.meter_id })
+    .find({ "metadata.meter_id": meterData.meter_id })
     .sort({ timestamp: -1 })
     .limit(SLIDING_WINDOW_SIZE)
     .toArray();
@@ -73,9 +76,7 @@ async function updateSummaryAndDetectAnomalies(client, change) {
 
   if (recentDataPoints.length < SLIDING_WINDOW_SIZE) {
     console.log(
-      `Not enough data points yet for meter ${meterData.meter_id}. Need ${
-        SLIDING_WINDOW_SIZE - recentDataPoints.length
-      } more.`
+      `Not enough data points yet for meter ${meterData.meter_id}. Need ${SLIDING_WINDOW_SIZE - recentDataPoints.length} more.`
     );
     return;
   }
@@ -113,7 +114,7 @@ async function updateSummaryAndDetectAnomalies(client, change) {
 
   if (anomalies.length > 0) {
     const anomaly = {
-      meter_id: meterData.meter_id,
+      metadata: { meter_id: meterData.meter_id },
       timestamp: new Date(meterData.timestamp * 1000),
       anomalies,
       data: meterData,

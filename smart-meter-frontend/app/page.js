@@ -16,7 +16,9 @@ import {
   Link,
 } from "@leafygreen-ui/typography";
 import InfoWizard from "./components/InfoWizard";
+import TimeSeriesAnalysis from "./components/TimeSeriesAnalysis";
 import Button from "@leafygreen-ui/button";
+import Toggle from "@leafygreen-ui/toggle";
 
 export default function Home() {
   const [meters, setMeters] = useState({});
@@ -24,23 +26,25 @@ export default function Home() {
   const [dataSize, setDataSize] = useState({});
   const [metrics, setMetrics] = useState({});
   const maxAnomalies = 10; // Limit the number of anomalies displayed
-  const [isRunning, setIsRunning] = useState(false); // For start/stop simulation button
+  const [isRunning, setIsRunning] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [iframeSrc, setIframeSrc] = useState(null);
   const [openHelpModal, setOpenHelpModal] = useState(false);
-
+  const [simulateGaps, setSimulateGaps] = useState(false);
 
   const handleButtonClick = async () => {
     if (isRunning) {
       await axios.get("/api/simulation/stop");
       setIsRunning(false);
     } else {
-      await axios.get("/api/simulation/start");
+      await axios.get(`/api/simulation/start?simulateGaps=${simulateGaps}`);
       setIsRunning(true);
-      // Automatically stop the simulation after 5 minutes
+      setHasStarted(true);
+      // Automatically stop the simulation after 2 minutes
       setTimeout(async () => {
         await axios.get("/api/simulation/stop");
         setIsRunning(false);
-      }, 2 * 60 * 1000); // 2 minutes in milliseconds
+      }, 2 * 60 * 1000);
     }
   };
 
@@ -63,8 +67,8 @@ export default function Home() {
 
     const fetchAnomaliesData = async () => {
       const response = await axios.get("/api/anomalies");
-      console.log("response", response);
-      setAnomalies(response.data.slice(0, maxAnomalies));
+      const data = Array.isArray(response.data) ? response.data : [];
+      setAnomalies(data.slice(0, maxAnomalies));
     };
 
     const fetchDataSize = async () => {
@@ -101,19 +105,10 @@ export default function Home() {
   return (
     <div className="app-container">
       <div className="container">
-        <H1>Smart Meter Demo</H1>
-        <Body className="body">
-          This demo simulates 5 smart meters sending data every 5 seconds - The
-          meters are sending data to MongoDB via Cedalo's MongoDB Bridge to
-          MongoDB
-        </Body>
-        <Body className="body">
-          Click on Start Simulation to run the demo. The simulation will auto
-          stop after 2 minutes.
-        </Body>
-
-        <div className="infowizard-container">
-          <InfoWizard
+        <div className="header-row">
+          <H1>Smart Meter Demo</H1>
+          <div className="infowizard-topright">
+            <InfoWizard
             open={openHelpModal}
             setOpen={setOpenHelpModal}
             tooltipText="Tell me more!"
@@ -168,126 +163,149 @@ export default function Home() {
               },
             ]}
           />
+          </div>
         </div>
 
-        {!isRunning && (
-          <div className="button-container">
-            <Button
-              className="simulation-button"
-              variant="baseGreen"
-              onClick={handleButtonClick}
-            >
-              Start Simulation
-            </Button>
-          </div>
+        {!hasStarted && (
+          <>
+            <Body className="body">
+              This demo simulates 5 smart meters sending data every 5 seconds - The
+              meters are sending data to MongoDB via Cedalo's MongoDB Bridge to
+              MongoDB
+            </Body>
+            <Body className="body">
+              Click on Start Simulation to run the demo. The simulation will auto
+              stop after 2 minutes.
+            </Body>
+          </>
         )}
 
-        {isRunning && (
-          <>
-            <H3 className="h3">Recent Meter Data</H3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Meter ID</th>
-                  <th>Timestamp</th>
-                  <th>Voltage (V)</th>
-                  <th>Current (A)</th>
-                  <th>Power (W)</th>
-                  <th>Energy (kWh)</th>
-                  <th>Power Factor</th>
-                  <th>Frequency (Hz)</th>
-                  <th>Location</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.values(meters).map((meter) => (
-                  <tr key={meter.meter_id}>
-                    <td>{meter.meter_id}</td>
-                    <td>{new Date(meter.timestamp * 1000).toLocaleString()}</td>
-                    <td>{meter.voltage}</td>
-                    <td>{meter.current}</td>
-                    <td>{meter.power}</td>
-                    <td>{meter.energy}</td>
-                    <td>{meter.power_factor}</td>
-                    <td>{meter.frequency}</td>
-                    <td>{meter.location || "N/A"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <H3 className="h3">Recent Anomalies</H3>
-            <Body className="explanation">
-              Anomalies are calculated by comparing the current reading of a
-              meter against the rolling average and standard deviation of the
-              last 24 hour readings for various metrics (voltage, current,
-              power, etc.). If the current reading deviates from the average by
-              more than three times the standard deviation, it is flagged as an
-              anomaly.
+        <div className="button-container">
+          <Button
+            className="simulation-button"
+            variant={isRunning ? "dangerOutline" : "baseGreen"}
+            onClick={handleButtonClick}
+          >
+            {isRunning ? "Stop Simulation" : "Start Simulation"}
+          </Button>
+          <div className="toggle-container">
+            <Toggle
+              aria-label="Simulate data gaps"
+              checked={simulateGaps}
+              onChange={async (checked) => {
+                setSimulateGaps(checked);
+                if (isRunning) {
+                  await axios.post("/api/simulation/gaps", { enabled: checked });
+                }
+              }}
+              size="small"
+            />
+            <Body style={{ marginLeft: 8, fontSize: 13, color: "#889397" }}>
+              Simulate data gaps (for gap-fill demo)
             </Body>
-            <div className="anomalies-table-container">
+          </div>
+          {isRunning && (
+            <Body style={{ marginLeft: 12, fontSize: 13, color: "#889397" }}>
+              Simulation running — auto-stops after 2 minutes
+            </Body>
+          )}
+        </div>
+
+        {hasStarted && (
+          <>
+            <div className="main-content">
+              {/* Left Column */}
+              <div className="left-column">
+                <H3 className="h3">Recent Meter Data</H3>
               <table>
                 <thead>
                   <tr>
                     <th>Meter ID</th>
                     <th>Timestamp</th>
-                    <th>Anomalies</th>
+                    <th>Voltage (V)</th>
+                    <th>Current (A)</th>
+                    <th>Power (W)</th>
+                    <th>Energy (kWh)</th>
+                    <th>Power Factor</th>
+                    <th>Frequency (Hz)</th>
+                    <th>Location</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {anomalies.map((anomaly) => (
-                    <tr key={anomaly._id}>
-                      <td>{anomaly.meter_id}</td>
-                      <td>{new Date(anomaly.timestamp).toLocaleString()}</td>
-                      <td>{anomaly.anomalies.join(", ")}</td>
+                  {Object.values(meters).map((meter) => (
+                    <tr key={meter.meter_id}>
+                      <td>{meter.meter_id}</td>
+                      <td>{new Date(meter.timestamp * 1000).toLocaleString()}</td>
+                      <td>{meter.voltage}</td>
+                      <td>{meter.current}</td>
+                      <td>{meter.power}</td>
+                      <td>{meter.energy}</td>
+                      <td>{meter.power_factor}</td>
+                      <td>{meter.frequency}</td>
+                      <td style={{whiteSpace: "nowrap"}}>{meter.location ? `${meter.location.coordinates[1].toFixed(4)}, ${meter.location.coordinates[0].toFixed(4)}` : "N/A"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+
+              <H3 className="h3">Recent Anomalies</H3>
+              <Body className="explanation">
+                Anomalies are calculated by comparing the current reading of a
+                meter against the rolling average and standard deviation of the
+                last 24 hour readings for various metrics (voltage, current,
+                power, etc.). If the current reading deviates from the average by
+                more than three times the standard deviation, it is flagged as an
+                anomaly.
+              </Body>
+              <div className="anomalies-table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Meter ID</th>
+                      <th>Timestamp</th>
+                      <th>Anomalies</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {anomalies.map((anomaly) => (
+                      <tr key={anomaly._id}>
+                        <td>{anomaly.metadata?.meter_id ?? anomaly.meter_id}</td>
+                        <td>{new Date(anomaly.timestamp).toLocaleString()}</td>
+                        <td>{anomaly.anomalies.join(", ")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <Banner className="banner">
-              <b>MongoDB's Time Series </b>offers significant benefits,
-              including a high compression ratio and fast read/write operations.
-              <a href="https://www.mongodb.com/products/capabilities/time-series">
-                Find out more
-              </a>
-              &nbsp;
-            </Banner>
-            <div className="data-size">
-              <div className="data-size-card">
-                <Badge>Regular Collection</Badge>
-                <h4> Data Storage Size (without bucketing)</h4>
-                <p>{dataSize.transformedStorageSize} KB</p>
+
+            {/* Right Column */}
+            <div className="right-column">
+              <Banner className="banner-right">
+                <b>MongoDB's Time Series </b>offers significant benefits,
+                including a high compression ratio and fast read/write operations.
+                <a href="https://www.mongodb.com/products/capabilities/time-series">
+                  Find out more
+                </a>
+              </Banner>
+              <div className="data-size">
+                <div className="data-size-card">
+                  <Badge>Regular Collection</Badge>
+                  <h4>Data Storage Size (without bucketing)</h4>
+                  <p>{dataSize.transformedStorageSize ?? "—"} KB</p>
+                </div>
+                <div className="data-size-card">
+                  <Badge variant="green">Time Series Collection</Badge>
+                  <h4>Data Storage Size</h4>
+                  <p>{dataSize.transformedTSStorageSize ?? "—"} KB</p>
+                </div>
               </div>
-              <div className="data-size-card">
-                <Badge variant="green">Time Series Collection</Badge>
-                <h4> Data Storage Size</h4>
-                <p>{dataSize.transformedTSStorageSize} KB</p>
+              <div className="chart-container">
+                <iframe className="charts" src={iframeSrc}></iframe>
               </div>
-              {/* <div className="data-size-card">
-                <Badge>Regular Collections</Badge>
-                <h4>Data Storage Size (without bucketing)</h4>
-                <p>{dataSize.anomaliesStorageSize} KB</p>
-              </div>
-              <div className="data-size-card">
-                <Badge variant="green">Time Series Collection</Badge>
-                <h4>Data Storage Size</h4>
-                <p>{dataSize.anomaliesTSStorageSize} KB</p>
-              </div> */}
+              <TimeSeriesAnalysis />
             </div>
-            <div>
-              <iframe className="charts" src={iframeSrc}></iframe>
-            </div>
-            {/* <H3 className="h3">Other Metrics</H3>
-            <div className="metrics">
-              <div className="metrics-card">
-                <h4>Write Speed</h4>
-                <p>{metrics.writeSpeed} ms</p>
-              </div>
-              <div className="metrics-card">
-                <h4>Read Speed</h4>
-                <p>{metrics.readSpeed} ms</p>
-              </div>
-                  </div>*/}
+          </div>
           </>
         )}
       </div>

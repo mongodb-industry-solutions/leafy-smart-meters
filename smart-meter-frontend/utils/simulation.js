@@ -18,9 +18,19 @@ const options = {
 const meters = 5; // Start publishing data for 5 meters
 const simulationDelay = 5000; // Publish data every 5 seconds
 
+// Fixed locations per meter (NYC area)
+const METER_LOCATIONS = {
+  1: { type: "Point", coordinates: [-73.9857, 40.7484] }, // Midtown Manhattan
+  2: { type: "Point", coordinates: [-73.9654, 40.7681] }, // Upper East Side
+  3: { type: "Point", coordinates: [-73.9991, 40.7247] }, // Lower Manhattan
+  4: { type: "Point", coordinates: [-73.9936, 40.6962] }, // Brooklyn Heights
+  5: { type: "Point", coordinates: [-73.9442, 40.7475] }, // Long Island City
+};
+
 let simulationIntervals = [];
 let simulationTimeout;
 let client = null; // Ensure client is declared here and initialized as null
+let simulateGapsEnabled = false; // When true, randomly skip readings to simulate data gaps
 
 function generateTypicalMeterData(meter_id, halfHour) {
   let baseVoltage = 220;
@@ -48,6 +58,7 @@ function generateTypicalMeterData(meter_id, halfHour) {
     energy: energy.toFixed(2),
     power_factor: power_factor.toFixed(2),
     frequency: frequency.toFixed(2),
+    location: METER_LOCATIONS[meter_id],
   };
 }
 
@@ -69,6 +80,7 @@ function generateAnomalousMeterData(meter_id) {
     energy: energy.toFixed(2),
     power_factor: power_factor.toFixed(2),
     frequency: frequency.toFixed(2),
+    location: METER_LOCATIONS[meter_id],
   };
 }
 
@@ -98,6 +110,14 @@ function publishMeterData(meter_id) {
     if (halfHour >= 48) {
       halfHour = 0; // Reset after a full day
     }
+
+    // Simulate data gaps: ~20% chance to skip this reading
+    if (simulateGapsEnabled && Math.random() < 0.2) {
+      console.log(`[Gap Simulation] Skipping reading for meter ${meter_id}`);
+      halfHour++;
+      return;
+    }
+
     let data;
     if (Math.random() < 0.2) {
       // 20% chance to generate an anomaly
@@ -109,7 +129,7 @@ function publishMeterData(meter_id) {
         `Publishing typical data for meter ${meter_id} at half-hour ${halfHour}:`
       );
     }
-    
+
     if (USE_MQTT_BROKER) {
       client.publish(TOPIC, JSON.stringify(data));
     } else {
@@ -120,8 +140,9 @@ function publishMeterData(meter_id) {
   simulationIntervals.push(interval);
 }
 
-function startSimulation() {
-  console.log(`Starting simulation in ${USE_MQTT_BROKER ? 'MQTT' : 'Direct'} mode`);
+function startSimulation(options = {}) {
+  simulateGapsEnabled = options.simulateGaps || false;
+  console.log(`Starting simulation in ${USE_MQTT_BROKER ? 'MQTT' : 'Direct'} mode${simulateGapsEnabled ? ' with gap simulation' : ''}`);
   
   if (USE_MQTT_BROKER) {
     // MQTT Mode
@@ -173,6 +194,11 @@ function startSimulation() {
   }
 }
 
+function setSimulateGaps(enabled) {
+  simulateGapsEnabled = enabled;
+  console.log(`Gap simulation ${enabled ? 'enabled' : 'disabled'}`);
+}
+
 function stopSimulation() {
   console.log("Stopping simulation...");
   if (simulationIntervals.length > 0) {
@@ -196,4 +222,4 @@ function stopSimulation() {
   }
 }
 
-export { startSimulation, stopSimulation };
+export { startSimulation, stopSimulation, setSimulateGaps };
