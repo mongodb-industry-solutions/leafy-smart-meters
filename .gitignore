@@ -68,3 +68,6 @@ mongodb-bridge.json
 cicd-kanopy/
 CLAUDE.md
 security_check.sh
+
+# DB migration dumps
+utils/migrate-db/dump/
